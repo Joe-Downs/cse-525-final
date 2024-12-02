@@ -1,4 +1,4 @@
-from RGBMatrix import RGBMatrix, RGBMatrixOptions
+from rgbmatrix import RGBMatrix, RGBMatrixOptions
 from PIL import Image
 import board
 
