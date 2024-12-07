@@ -1,9 +1,10 @@
+from time import sleep
+
 #from rgbmatrix import RGBMatrix, RGBMatrixOptions
 from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions
-from PIL import Image
 import board
 
-image = Image.open("gradient.png")
+import ui_models
 
 options = RGBMatrixOptions()
 options.rows = 32
@@ -21,10 +22,14 @@ options.hardware_mapping = 'adafruit-hat'  # If you have an Adafruit HAT: 'adafr
 
 matrix = RGBMatrix(options = options)
 
-# Make image fit our screen.
-# image.thumbnail((matrix.width, matrix.height), Image.ANTIALIAS)
+weather_home = ui_models.WeatherScreen(image_file="assets/weather-concept.png")
+weather_home.toggle_selection()
+weather_home.next_selection()
+matrix.SetImage(weather_home.image)
+# while True:
+#     pass
 
-matrix.SetImage(image.convert('RGB'))
-
-while True:
-    pass
+for _ in range(100):
+    sleep(1)
+    weather_home.next_selection()
+    matrix.SetImage(weather_home.image)
