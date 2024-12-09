@@ -53,3 +53,16 @@ def get_day_condition_image(condition, weekday):
     combined.paste(condition_image, (0,0))
     combined.paste(weekday_image, (0,condition_image.height+1))
     return combined
+
+def get_location_image(location):
+    """Returns image object of letters spelling out location name."""
+    letters_dir = asset_dir + "letters/"
+    length = len(location)
+    height = 9
+    width = 5
+    loc_image = Image.new("RGBA", ((width+1)*length, height), None)
+    for i in range(length):
+        letter_image = Image.open(f"{letters_dir}{location[i]}.png")
+        loc_image.paste(letter_image, ((width + 1) * i + 1, 0))
+    loc_image.save("foo.png")
+    return loc_image

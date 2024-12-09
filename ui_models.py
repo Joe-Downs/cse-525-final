@@ -42,6 +42,7 @@ class WeatherScreen(_Screen):
         self.selection_mode = False
         self.weather_datas = data
         self._draw_weather()
+        self._draw_loc()
         return
 
     def _draw_selection(self):
@@ -50,6 +51,16 @@ class WeatherScreen(_Screen):
         origin = self.selections[self.current_selection]
         end = (origin[0] + self.selection_size[0], origin[1] + self.selection_size[1])
         draw.rectangle([origin, end], outline="#FF0000")
+        return
+
+    def _draw_loc(self):
+        """Draw the location text (image) to the bottom of the screen."""
+        origin = (2,20)
+        # We're assuming that the locations are the same for each data point
+        location = self.weather_datas[0].location
+        loc_image = assets.get_location_image(location)
+        self.image.paste(loc_image, origin, mask=loc_image)
+        self.cache_image()
         return
 
     def _draw_weather(self):

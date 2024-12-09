@@ -29,7 +29,7 @@ weathers = [int] * 5
 
 for i in range(5):
     date = datetime.fromisoformat(f"2024-05-0{i+1}")
-    weather = ui_models.WeatherData(Condition(i+1), date)
+    weather = ui_models.WeatherData(Condition(i+1), date, location="SDF")
     weathers[i] = weather
 
 weather_home = ui_models.WeatherScreen(image_file="assets/weather-frame.png", data=weathers)
