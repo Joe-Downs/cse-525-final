@@ -23,6 +23,16 @@ class Condition(Enum):
     RAINY = 6
     STORMY = 7
 
+class TimeInterval(Enum):
+    """Time interval Enum
+
+    Numerical value is in seconds."""
+    SECOND = 1
+    MINUTE = 60
+    HOUR = 3600
+    DAY = 86400
+    WEEK = 604800
+
 class WeatherData():
     def __init__(self, condition, date, temp=20, location="SDF"):
         self.condition = condition
@@ -30,4 +40,10 @@ class WeatherData():
         self.temp = temp
         self.location = location
         self.weekday = Weekday(self.date.isoweekday())
+        return
+
+class StockData():
+    def __init__(self, ticker, time_series):
+        self.ticker = ticker
+        self.time_series = time_series
         return
