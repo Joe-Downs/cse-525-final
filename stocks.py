@@ -7,6 +7,7 @@ topStocksDict = {}
 
 for ticker in topStocks: #Get data for all 10 stock using the tickers in topStocks
     stock = yf.Ticker(ticker) #Create ticker object to collect data
+    history_df = stock.history(period="5d", interval="5m")
     stock_info = stock.info  #Retrieve company info for the stock
     topStocksDict[ticker] = { #Place dictionary for stock in topStocksDict
         'Company Name': stock_info.get('longName', 'N/A'),
@@ -18,6 +19,7 @@ for ticker in topStocks: #Get data for all 10 stock using the tickers in topStoc
         '52 Week Low': stock_info.get('fiftyTwoWeekLow', 'N/A'),
         'Dividend Rate' : stock_info.get('dividendRate', 'N/A'),
         'Market Cap': stock_info.get('marketCap', 'N/A'),
+        'History': history_df,
     }
 
 #print nested dictionary

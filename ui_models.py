@@ -124,12 +124,13 @@ class WeatherScreen(_Screen):
 class StockScreen(_Screen):
     def __init__(self, data, image_file=None):
         super().__init__(cache_file=f"{cache}stock-home.png", image_file=image_file)
+        #print(data)
         self.stock_data = data
         self._draw_stock()
         return
 
     def _draw_stock(self):
-        graph = assets.get_stock_graph(self.stock_data.data, self.drawable_area[0], self.drawable_area[1])
+        graph = assets.get_stock_graph(self.stock_data.time_series, self.drawable_area[0], self.drawable_area[1])
         self.image.paste(graph, (self.drawable_origin))
         self._draw_text(self.stock_data.ticker)
         self.cache_image()

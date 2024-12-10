@@ -1,4 +1,6 @@
-from PIL import Image
+import math
+
+from PIL import Image, ImageDraw
 
 from data_models import Weekday, Condition
 
@@ -72,15 +74,29 @@ def get_day_condition_image(condition, weekday):
 
 # =================================== Stocks ===================================
 def get_stock_graph(time_series, width, height):
-    spread = time_series[height-1] - time_series[0]
+    time_series = time_series[-width::]
+    spread = time_series.iloc[-1] - time_series.iloc[0]
     minimum = time_series.min()
     price_range = time_series.max() - minimum
-    pixel_scale = price_range / height
+    pixel_scale = price_range / (height - 1)
     stock_graph = Image.new("RGBA", (width, height), None)
-    color = "#00FF00"
+    draw = ImageDraw.Draw(stock_graph)
+    color = (0, 255, 0)
     if spread < 0:
-        color = "#FF0000"
-    for i in range(0,width):
-        coord = (i, round((time_series[i] - minimum)/pixel_scale))
-        stock_graph.putpixel(coord, color)
+        color = (255, 0, 0)
+
+    def _calculate_pixel_y(value):
+        return math.floor((value - minimum)/pixel_scale)
+    prev_value = _calculate_pixel_y(time_series.iloc[-1])
+    stock_graph.putpixel((0, prev_value), color)
+
+    for i in range(1, width):
+        coord = (i, _calculate_pixel_y(time_series.iloc[-i-1]))
+        if coord[1] > prev_value + 1:
+            draw.line((coord, (i, prev_value+1)), fill=color)
+        elif coord[1] < prev_value - 1:
+            draw.line((coord, (i, prev_value-1)), fill=color)
+        else:
+            stock_graph.putpixel(coord, color)
+        prev_value = coord[1]
     return stock_graph
