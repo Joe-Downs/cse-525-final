@@ -39,7 +39,7 @@ for ticker, info in stocks.topStocksDict.items():
     stock_array.append(StockData(ticker, timeseries))
 
 weather_home = ui_models.WeatherScreen(image_file="assets/weather-frame.png", data=weathers)
-stock_home = ui_models.StockScreen(image_file="assets/stock-frame.png", data=stock_array[0])
+stock_home = ui_models.StockScreen(image_file="assets/stock-frame.png", data=stock_array)
 
 weather_home.toggle_selection()
 #weather_home.next_selection()
@@ -55,4 +55,5 @@ for _ in range(100):
     #weather_home.next_selection()
     #weather_home.next_selection()
     #weather_home.prev_selection()
-    #matrix.SetImage(weather_home.image)
+    stock_home.next_selection()
+    matrix.SetImage(stock_home.image)
