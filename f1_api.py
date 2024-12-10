@@ -100,7 +100,7 @@ def get_driver_standings(
             # No standings for the given round, try to get the previous round
             return get_driver_standings(season, str(int(round) - 1), position)
 
-        return standings_lists
+        return standings_lists[0]
 
 
 def prettify_driver_standings(standing_lists: List[Dict]) -> str:
@@ -172,7 +172,7 @@ def get_constructor_standings(
             # No standings for the given round, try to get the previous round
             return get_constructor_standings(season, str(int(round) - 1), position)
 
-        return standings_lists
+        return standings_lists[0]
 
 
 def prettify_constructor_standings(constructor_standings: List[Dict[str, str]]) -> str:
@@ -205,10 +205,14 @@ def prettify_constructor_standings(constructor_standings: List[Dict[str, str]]) 
 
     return title + "\n" + "\n".join(standings)
 
+import ui_models
+
+
+
 
 if __name__ == "__main__":
     # t = get_driver_standings()
-    # print(prettify_driver_standings(t))
+    # print(t)
 
     # t = get_driver_standings("2021")
     # print(prettify_driver_standings(t))
@@ -220,7 +224,7 @@ if __name__ == "__main__":
     # print(prettify_driver_standings(t))
 
     # t = get_constructor_standings()
-    # print(prettify_constructor_standings(t))
+    # print((t))
 
     # t = get_constructor_standings("2021")
     # print(prettify_constructor_standings(t))
@@ -229,6 +233,13 @@ if __name__ == "__main__":
     # print(prettify_constructor_standings(t))
 
     # t = get_constructor_standings("2021", "1", "5")
+    
+    
+    top_3_drivers = get_driver_standings()['DriverStandings'][:3]
+    top_3_drivers_codes = list(map(lambda driver: driver['Driver']['code'], get_driver_standings()['DriverStandings'][:3]))
 
-    print(prettify_driver_standings(get_driver_standings()))
-    print(prettify_constructor_standings(get_constructor_standings()))
+    print(top_3_drivers_codes)
+
+    print(top_3_drivers)
+
+

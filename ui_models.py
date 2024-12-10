@@ -5,6 +5,9 @@ from PIL import Image, ImageDraw
 import assets
 from data_models import WeatherData, Weekday, Condition
 
+TEXT_HEIGHT = 9
+TEXT_WIDTH = 6
+
 cache = "__cache__/"
 
 # =============================== Generic Screen ===============================
@@ -60,6 +63,8 @@ class _Screen:
         """Draw text to the screen at origin (or text_origin if not provided)"""
         if origin is None:
             paste_location = self.text_origin
+        else:
+            paste_location = origin
         text_image = assets.get_text_image(text)
         if mask:
             mask = text_image
@@ -152,3 +157,63 @@ class StockScreen(_Screen):
         else:
             self._draw_stock()
         return
+
+class F1Screen(_Screen):
+    def __init__(self, data, image_file=None):
+        super().__init__(data=data, cache_file=f"{cache}weather-home.png" ,image_file=image_file)
+        self.selection_size = (6, 7)
+        self.selections = self._create_selections((self.width // 2 - 10, self.origin[1]+1), (10, 0), 2)
+        self.current_selection = 0 # 0 for drivers, 1 for constructors
+        self.icons = [assets.get_icon("helmet-orange-thin"), assets.get_icon("car")]
+        self._draw_f1()
+        return
+
+    def _draw_text(self, text, origin, mask=None):
+        """ Draw full "sentences" one letter at a time. """
+        for i, char in enumerate(text):
+            super()._draw_text(char, (origin[0] + TEXT_WIDTH*i, origin[1]), mask)
+        return
+
+
+    def _draw_selection(self):
+        draw = ImageDraw.Draw(self.image)
+        origin = self.selections[self.current_selection]
+        end = (origin[0] + self.selection_size[0], origin[1] + self.selection_size[1])
+        draw.rectangle([origin, end], outline="#FF0000")
+        return
+
+    def _draw_f1(self):
+        """ Draw helmet and car icons on the screen as well as standings."""
+        self._clear_image()
+        for i in range(len(self.selections)):
+            icon = self.icons[i]
+            self.image.paste(icon, self.selections[i], mask=icon)
+        self.cache_image()
+
+        self._draw_standings()
+
+        return
+
+    def _move_selection(self, delta):
+        super()._move_selection(delta)
+        self._draw_f1()
+        self._draw_selection()
+        return
+
+    def toggle_selection(self):
+        self.selection_mode = not self.selection_mode
+        if self.selection_mode:
+            self.current_selection = 0
+            self._draw_selection()
+        else:
+            self.current_selection = None
+            self._reload_image()
+        return
+
+    def _draw_standings(self):
+        """ Draw either driver or constructor standings on the screen. (based on current selection)"""
+        for i, driver_code in enumerate(self.data[self.current_selection]):
+            self._draw_text(driver_code, origin=(self.origin[0], self.origin[1] + 10 + TEXT_HEIGHT*i))
+
+        return
+    

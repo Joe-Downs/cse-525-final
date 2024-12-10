@@ -100,3 +100,9 @@ def get_stock_graph(time_series, width, height):
             stock_graph.putpixel(coord, color)
         prev_value = coord[1]
     return stock_graph
+
+
+# =================================== F1 =======================================
+def get_icon(icon_name):
+    """Returns the icon image."""
+    return Image.open(f"{asset_dir}f1-icons/{icon_name}.png")
