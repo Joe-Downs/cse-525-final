@@ -5,8 +5,8 @@ from PIL import Image, ImageDraw
 import assets
 from data_models import WeatherData, Weekday, Condition
 
-TEXT_HEIGHT = 9
-TEXT_WIDTH = 6
+TEXT_HEIGHT = 6
+TEXT_WIDTH = 3
 
 cache = "__cache__/"
 
@@ -158,20 +158,22 @@ class StockScreen(_Screen):
             self._draw_stock()
         return
 
+# ================================= F1Screen ===================================
 class F1Screen(_Screen):
     def __init__(self, data, image_file=None):
-        super().__init__(data=data, cache_file=f"{cache}weather-home.png" ,image_file=image_file)
+        super().__init__(data=data, cache_file=f"{cache}f1-home.png" ,image_file=image_file, origin=(2, 0), drawable_area=(60, 32))
         self.selection_size = (6, 7)
-        self.selections = self._create_selections((self.width // 2 - 10, self.origin[1]+1), (10, 0), 2)
+        self.selections = self._create_selections((53, self.origin[1]+1), (-1, 10), 2)
         self.current_selection = 0 # 0 for drivers, 1 for constructors
         self.icons = [assets.get_icon("helmet-orange-thin"), assets.get_icon("car")]
         self._draw_f1()
         return
 
-    def _draw_text(self, text, origin, mask=None):
+    def _draw_text(self, text, origin):
         """ Draw full "sentences" one letter at a time. """
         for i, char in enumerate(text):
-            super()._draw_text(char, (origin[0] + TEXT_WIDTH*i, origin[1]), mask)
+            char_image = assets.get_letter_from_atlas(char)
+            self.image.paste(char_image, (origin[0] + (TEXT_WIDTH+1) * i, origin[1]), mask=char_image)
         return
 
 
@@ -185,11 +187,15 @@ class F1Screen(_Screen):
     def _draw_f1(self):
         """ Draw helmet and car icons on the screen as well as standings."""
         self._clear_image()
+
+        # Draw selection icons
         for i in range(len(self.selections)):
             icon = self.icons[i]
             self.image.paste(icon, self.selections[i], mask=icon)
+    
         self.cache_image()
 
+        # Draw standings
         self._draw_standings()
 
         return
@@ -212,8 +218,9 @@ class F1Screen(_Screen):
 
     def _draw_standings(self):
         """ Draw either driver or constructor standings on the screen. (based on current selection)"""
-        for i, driver_code in enumerate(self.data[self.current_selection]):
-            self._draw_text(driver_code, origin=(self.origin[0], self.origin[1] + 10 + TEXT_HEIGHT*i))
+        podium_text_origins = [(18, 8), (3, 11), (33, 14)]
+        for i, (code, points) in enumerate(self.data[self.current_selection]):
+            self._draw_text(code, podium_text_origins[i])
+            self._draw_text(str(points), (podium_text_origins[i][0], podium_text_origins[i][1] + 13))
 
         return
-    

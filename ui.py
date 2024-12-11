@@ -40,14 +40,16 @@ for i in range(5):
 #     timeseries = info["History"]["Open"]
 #     stock_array.append(StockData(ticker, timeseries))
 
-top_3_drivers_codes = list(map(lambda driver: driver['Driver']['code'], f1_api.get_driver_standings()['DriverStandings'][:3]))
-top_3_constructors = list(map(lambda constructor: constructor['Constructor']['name'], f1_api.get_constructor_standings()['ConstructorStandings'][:3]))
-print(top_3_drivers_codes)
+driver_standings = f1_api.get_driver_standings(1978)['DriverStandings']
+constructor_standings = f1_api.get_constructor_standings(1978)['ConstructorStandings']
+top_3_drivers = list(map(lambda driver: (driver['Driver'].get('code', driver['Driver']['familyName'][:3]), driver['points']), driver_standings[:3]))
+top_3_constructors = list(map(lambda constructor: (f1_api.constructor_name_to_id.get(constructor['Constructor']['constructorId'], constructor['Constructor']['name'][:3]), constructor['points']), constructor_standings[:3]))
+print(top_3_drivers)
 print(top_3_constructors)
 
 weather_home = ui_models.WeatherScreen(image_file="assets/weather-frame.png", data=weathers)
 # stock_home = ui_models.StockScreen(image_file="assets/stock-frame.png", data=stock_array)
-f1_home = ui_models.F1Screen(image_file="assets/weather-frame.png", data=(top_3_drivers_codes, top_3_drivers_codes))
+f1_home = ui_models.F1Screen(image_file="assets/f1-frame.png", data=(top_3_drivers, top_3_constructors))
 
 weather_home.toggle_selection()
 f1_home.toggle_selection()

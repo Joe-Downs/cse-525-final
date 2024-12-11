@@ -1,6 +1,6 @@
 import math
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 from data_models import Weekday, Condition
 
@@ -19,6 +19,62 @@ def get_text_image(text):
         loc_image.paste(letter_image, ((width + 1) * i + 1, 0))
     return loc_image
 
+def get_letter_from_atlas(letter):
+    """Returns image object of letter from atlas."""
+    letter_width = 3
+    letter_height = 5
+    cols = 6
+    padX, padY = 3, 1
+
+    atlas = Image.open(f"{asset_dir}atlas.png")
+    letter = letter.upper()
+    if letter == " ":
+        return Image.new("RGBA", (letter_width, letter_height), None)
+    if letter.isdigit():
+        letter_index = ord(letter) - 22 
+    else:
+        letter_index = ord(letter) - 65
+    # print("Gettnig letter", letter, letter_index)
+    u = letter_index % cols
+    v = letter_index // cols
+    x = u * (letter_width + padX)
+    y = v * (letter_height + padY)
+
+    letter_image = atlas.crop((x, y, x + letter_width, y + letter_height))
+
+    # # save image to assets/temp 
+    # letter_image.save(f"{asset_dir}temp/{letter}.png")
+    # print(f"U: {u}, V: {v}")
+    # print(f"X: {x}, Y: {y}")
+
+    # # input("Press enter to continue")
+
+    return letter_image
+
+def create_atlas():
+    # TODO: doesnt work
+    # Create a new blank image for the atlas
+    letter_width = 6
+    letter_height = 6
+    columns = 6
+    rows = 5
+    atlas_width = columns * letter_width
+    atlas_height = rows * letter_height
+    atlas = Image.new("RGBA", (atlas_width, atlas_height), (255, 255, 255, 0))
+
+    # Load a font
+    font = ImageFont.truetype("arial.ttf", 5)
+
+    # Draw each letter onto the atlas
+    draw = ImageDraw.Draw(atlas)
+    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for i, letter in enumerate(letters):
+        x = (i % columns) * letter_width
+        y = (i // columns) * letter_height
+        draw.text((x, y), letter, font=font, fill=(0, 0, 0, 255))
+
+    # Save the atlas image
+    atlas.save("letters.png")
 
 # =================================== Weather ==================================
 

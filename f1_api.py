@@ -10,6 +10,20 @@ ordinal = lambda n: "%d%s" % (
     "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10 :: 4],
 )
 
+# constructor name to constructor ID
+constructor_name_to_id = {
+    "mercedes": "AMG",
+    "red_bull": "RBR",
+    "mclaren": "MCL",
+    "aston_martin": "AMR",
+    "alpine": "ALP",
+    "ferrari": "FER",
+    "alpha_tauri": "ATR",
+    "alfa": "ALF",
+    "haas": "HAS",
+    "williams": "WIL",
+}
+
 # favourites
 favourite_drivers = ["hamilton", "max_verstappen"]
 favourite_teams = ["mercedes", "red_bull"]
