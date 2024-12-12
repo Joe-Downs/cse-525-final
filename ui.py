@@ -38,7 +38,7 @@ options.cols = 64
 options.chain_length = 1
 options.parallel = 1
 options.hardware_mapping = "adafruit-hat"  # If you have an Adafruit HAT: 'adafruit-hat'
-options.rgb_pins=[5, 6, 13, 12, 23, 16]
+options.led_rgb_sequence = "RBG"
 
 matrix = RGBMatrix(options=options)
 
