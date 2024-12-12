@@ -22,6 +22,8 @@ class Condition(Enum):
     CLOUDY = 5
     RAINY = 6
     STORMY = 7
+    SNOWY = 8
+    UNKNOWN = -1
 
 class TimeInterval(Enum):
     """Time interval Enum
