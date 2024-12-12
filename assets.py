@@ -80,41 +80,39 @@ def create_atlas():
 
 def get_condition(condition):
     """Returns Image object corresponding to the condition."""
-    match condition:
-        case Condition.CLEAR_DAY:
-            return Image.open(f"{asset_dir}clear-day.png")
-        case Condition.CLEAR_NIGHT:
-            return Image.open(f"{asset_dir}clear-night.png")
-        case Condition.PARTLY_CLOUDY_DAY:
-            return Image.open(f"{asset_dir}partly-cloudy-day.png")
-        case Condition.PARTLY_CLOUDY_NIGHT:
-            return Image.open(f"{asset_dir}partly-cloudy-night.png")
-        case Condition.CLOUDY:
-            return Image.open(f"{asset_dir}cloudy.png")
-        case Condition.RAINY:
-            return Image.open(f"{asset_dir}rainy.png")
-        case Condition.STORMY:
-            return Image.open(f"{asset_dir}stormy.png")
+    if condition==Condition.CLEAR_DAY:
+        return Image.open(f"{asset_dir}clear-day.png")
+    if condition==Condition.CLEAR_NIGHT:
+        return Image.open(f"{asset_dir}clear-night.png")
+    if condition==Condition.PARTLY_CLOUDY_DAY:
+        return Image.open(f"{asset_dir}partly-cloudy-day.png")
+    if condition==Condition.PARTLY_CLOUDY_NIGHT:
+        return Image.open(f"{asset_dir}partly-cloudy-night.png")
+    if condition==Condition.CLOUDY:
+        return Image.open(f"{asset_dir}cloudy.png")
+    if condition==Condition.RAINY:
+        return Image.open(f"{asset_dir}rainy.png")
+    if condition==Condition.STORMY:
+        return Image.open(f"{asset_dir}stormy.png")
     return
 
 def get_weekday(weekday):
     """Returns Image object corresponding to the weekday."""
     weekday_dir = asset_dir + "weekdays/"
-    match weekday:
-        case Weekday.MONDAY:
-            return Image.open(f"{weekday_dir}M.png")
-        case Weekday.TUESDAY:
-            return Image.open(f"{weekday_dir}T.png")
-        case Weekday.WEDNESDAY:
-            return Image.open(f"{weekday_dir}W.png")
-        case Weekday.THURSDAY:
-            return Image.open(f"{weekday_dir}T.png")
-        case Weekday.FRIDAY:
-            return Image.open(f"{weekday_dir}F.png")
-        case Weekday.SATURDAY:
-            return Image.open(f"{weekday_dir}S.png")
-        case Weekday.SUNDAY:
-            return Image.open(f"{weekday_dir}S.png")
+    if weekday==Weekday.MONDAY:
+        return Image.open(f"{weekday_dir}M.png")
+    if weekday==Weekday.TUESDAY:
+        return Image.open(f"{weekday_dir}T.png")
+    if weekday==Weekday.WEDNESDAY:
+        return Image.open(f"{weekday_dir}W.png")
+    if weekday==Weekday.THURSDAY:
+        return Image.open(f"{weekday_dir}T.png")
+    if weekday==Weekday.FRIDAY:
+        return Image.open(f"{weekday_dir}F.png")
+    if weekday==Weekday.SATURDAY:
+        return Image.open(f"{weekday_dir}S.png")
+    if weekday==Weekday.SUNDAY:
+        return Image.open(f"{weekday_dir}S.png")
     return
 
 def get_day_condition_image(condition, weekday):
