@@ -23,7 +23,7 @@ class _Screen:
         self.cached_file = cache_file
         self.padding = padding
         self.selection_mode = False
-        self.current_selection = None
+        self.current_selection = 0
         self.drawable_area = drawable_area
         self.drawable_origin = drawable_origin
         self.data = data
@@ -71,9 +71,13 @@ class _Screen:
         self.image.paste(text_image, paste_location, mask=mask)
         return
 
+    def _draw_selection(self):
+        return
+
     def _move_selection(self, delta):
-        self._reload_image()
         self.current_selection = (self.current_selection + delta) % len(self.data)
+        self._reload_image()
+        self._draw_selection()
         return
 
     def next_selection(self):
@@ -84,6 +88,15 @@ class _Screen:
         self._move_selection(-1)
         return
 
+    def toggle_selection(self):
+        self.selection_mode = not self.selection_mode
+        self.current_selection = 0
+        if self.selection_mode:
+            self._draw_selection()
+        else:
+            self._reload_image()
+        return
+
 # ================================ WeatherScreen ===============================
 class WeatherScreen(_Screen):
     def __init__(self, data, image_file=None):
@@ -91,41 +104,44 @@ class WeatherScreen(_Screen):
         self.selection_size = (11,17)
         self.selections = self._create_selections(self.origin, (self.selection_size[0], 0), 5)
         print(f"Selections: {self.selections}")
+        self.current_loc_selection = 0
+        self.current_location = self.data[self.current_loc_selection]
         self._draw_weather()
         return
 
+    """
     def _draw_selection(self):
         draw = ImageDraw.Draw(self.image)
         origin = self.selections[self.current_selection]
         end = (origin[0] + self.selection_size[0], origin[1] + self.selection_size[1])
         draw.rectangle([origin, end], outline="#FF0000")
         return
+    """
 
     def _draw_weather(self):
         """Draw the conditons on the screen."""
         self._clear_image()
+        data = self.current_location
         for i in range(len(self.selections)):
-            data = self.data[i]
-            combined = assets.get_day_condition_image(data.condition, data.weekday)
+            combined = assets.get_day_condition_image(data[i].condition, data[i].weekday)
             self.image.paste(combined, (self.origin[0] + 1 + (combined.width + self.padding) * i, self.origin[1] + 1), mask=combined)
         # We're assuming that the locations are the same for each data point
-        self._draw_text(self.data[0].location, mask=True)
+        self._draw_text(data[0].location, mask=True)
         self.cache_image()
         return
 
-    def _move_selection(self, delta):
-        super()._move_selection(delta)
-        #self._draw_selection()
+    def _draw_selection(self):
+        draw = ImageDraw.Draw(self.image)
+        origin = (self.text_origin[0], self.text_origin[1] - 1)
+        end = (origin[0] + (6*len(self.current_location[0].location)+1), origin[1] + 10)
+        draw.rectangle([origin, end], outline="#FF0000")
         return
 
-    def toggle_selection(self):
-        self.selection_mode = not self.selection_mode
-        if self.selection_mode:
-            self.current_selection = 0
-            self._draw_selection()
-        else:
-            self.current_selection = None
-            self._reload_image()
+    def _move_selection(self, delta):
+        self.current_loc_selection = (self.current_loc_selection + delta) % len(self.data)
+        self.current_location = self.data[self.current_loc_selection]
+        self._draw_weather()
+        self._draw_selection()
         return
 
     def update_weather(self, weather_datas):
@@ -137,8 +153,14 @@ class WeatherScreen(_Screen):
 class StockScreen(_Screen):
     def __init__(self, data, image_file=None):
         super().__init__(data=data, cache_file=f"{cache}stock-home.png", image_file=image_file)
-        self.current_selection = 0
         self._draw_stock()
+        return
+
+    def _draw_selection(self):
+        draw = ImageDraw.Draw(self.image)
+        origin = (2,19)
+        end = ((6*len(self.data[self.current_selection].ticker)+2),29)
+        draw.rectangle([origin, end], outline="#FF00FF")
         return
 
     def _draw_stock(self):
