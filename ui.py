@@ -1,8 +1,8 @@
 from time import sleep
 from datetime import datetime, timedelta
 
-# from rgbmatrix import RGBMatrix, RGBMatrixOptions
-from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions
+from rgbmatrix import RGBMatrix, RGBMatrixOptions
+#from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions
 
 import assets
 import ui_models
