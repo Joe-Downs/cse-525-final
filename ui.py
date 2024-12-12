@@ -99,4 +99,4 @@ while True:
         secondary_selection = not secondary_selection
         primary_selection = not primary_selection
     sleep(0.1)
-    matrix.SetImage(selections[selection].image)
+    matrix.SetImage(selections[selection].image.convert('RGB'))
